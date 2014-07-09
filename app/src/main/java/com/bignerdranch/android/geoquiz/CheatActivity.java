@@ -17,14 +17,23 @@ public class CheatActivity extends Activity {
     public static final String EXTRA_ANSWER_IS_TRUE =
             "com.bignerdranch.android.geoquiz.answer_is_true";
     public static final String EXTRA_ANSWER_SHOWN = "com.bignerdranch.android.geoquiz.answer_show";
+    private static final String KEY_SHOWN = "cheat_shown";
 
     private boolean mAnswerIsTrue;
+    private boolean mAnswerShown = false;
     private TextView mAnswerTextView;
     private Button mShowAnswer;
 
-    private void setAnswerShownResult(boolean isAnswerShown) {
+    private void updateAnswerShown() {
+        if (mAnswerShown) {
+            if (mAnswerIsTrue) {
+                mAnswerTextView.setText(R.string.true_button);
+            } else {
+                mAnswerTextView.setText(R.string.false_button);
+            }
+        }
         Intent data = new Intent();
-        data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        data.putExtra(EXTRA_ANSWER_SHOWN, mAnswerShown);
         setResult(RESULT_OK, data);
     }
 
@@ -33,8 +42,6 @@ public class CheatActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
-        setAnswerShownResult(false);
-
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         mAnswerTextView = (TextView)findViewById(R.id.answerTextView);
 
@@ -42,15 +49,23 @@ public class CheatActivity extends Activity {
         mShowAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAnswerIsTrue) {
-                    mAnswerTextView.setText(R.string.true_button);
-                } else {
-                    mAnswerTextView.setText(R.string.false_button);
-                }
-                setAnswerShownResult(true);
+                mAnswerShown = true;
+                updateAnswerShown();
             }
         });
+
+        if (savedInstanceState != null) {
+            mAnswerShown = savedInstanceState.getBoolean(KEY_SHOWN);
+        }
+
+        updateAnswerShown();
+
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(KEY_SHOWN, mAnswerShown);
+    }
 
 }
