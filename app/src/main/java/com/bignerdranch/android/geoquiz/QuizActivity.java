@@ -24,6 +24,7 @@ public class QuizActivity extends ActionBarActivity {
     private Button mNextButton;
     private Button mCheatButton;
     private TextView mQuestionTextView;
+    private TextView mApiTextView;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[] {
         new TrueFalse(R.string.question_oceans, true),
@@ -79,6 +80,8 @@ public class QuizActivity extends ActionBarActivity {
         mIsCheater = false;
 
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
+        mApiTextView = (TextView)findViewById(R.id.api_text_view);
+        mApiTextView.setText("API level " + Build.VERSION.SDK_INT);
 
         mTrueButton = (Button)findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
